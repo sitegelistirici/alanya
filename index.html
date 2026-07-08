@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alanya İtiraf Portalı</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
     <style>
@@ -16,7 +17,11 @@
         <!-- HEADER -->
         <header class="header">
             <div class="header-content">
-                <button id="hamburger" class="hamburger">☰</button>
+                <button id="hamburger" class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
                 <div class="logo">
                     <span class="logo-icon">🔥</span>
                     <span class="logo-text">ALANYA İTİRAF</span>
@@ -48,10 +53,12 @@
 
         <!-- MAIN CONTENT -->
         <main class="main-content">
+            
+            <!-- ANA SAYFA -->
             <div id="home" class="tab-content active">
                 <div class="hero">
                     <h1 class="hero-title">ALANYA İTİRAF SİTEMİZE<br>HOŞ GELDİNİZ</h1>
-                    <p class="hero-subtitle">Şehrimizin en samimi itirafları burada.</p>
+                    <p class="hero-subtitle">Şehrimizin en samimi, en cesur ve en gizli itirafları burada. Tamamen anonim ve güvenli.</p>
                     <div class="hero-buttons">
                         <button onclick="switchTab('confessions')" class="btn-primary">İtirafları Oku</button>
                         <button onclick="switchTab('submit')" class="btn-secondary">İtirafını Bırak</button>
@@ -59,11 +66,55 @@
                 </div>
             </div>
 
-            <div id="confessions" class="tab-content">İtiraflar İçeriği (Henüz boş)</div>
-            <div id="submit" class="tab-content">İtiraf Ver İçeriği (Henüz boş)</div>
-            <div id="polls" class="tab-content">Anketler İçeriği (Henüz boş)</div>
-            <div id="leaders" class="tab-content">Liderler İçeriği (Henüz boş)</div>
-            <div id="admin" class="tab-content">Admin İçeriği (Henüz boş)</div>
+            <!-- İTİRAFLAR -->
+            <div id="confessions" class="tab-content">
+                <h2 class="section-title">Son İtiraflar</h2>
+                <div id="confessions-list" class="posts-container"></div>
+            </div>
+
+            <!-- İTİRAF VER -->
+            <div id="submit" class="tab-content">
+                <h2 class="section-title">İtirafını Bırak</h2>
+                <div class="submit-form">
+                    <textarea id="post-text" placeholder="İtiraflarını burada yaz... Anonim kalacak." rows="7"></textarea>
+                    
+                    <div class="image-upload">
+                        <label for="image-input" class="upload-label">
+                            <span class="upload-icon">📸</span>
+                            <span id="file-name">Görsel ekle (isteğe bağlı)</span>
+                        </label>
+                        <input type="file" id="image-input" accept="image/*" hidden>
+                    </div>
+                    
+                    <button onclick="submitPost()" class="btn-primary full-width">İtirafı Gönder</button>
+                </div>
+            </div>
+
+            <!-- ANKETLER -->
+            <div id="polls" class="tab-content">
+                <h2 class="section-title">Aktif Anketler</h2>
+                <div id="polls-list" class="polls-container"></div>
+            </div>
+
+            <!-- LİDERLER -->
+            <div id="leaders" class="tab-content">
+                <h2 class="section-title">En Aktif Kullanıcılar</h2>
+                <div id="leaders-list" class="leaders-table"></div>
+            </div>
+
+            <!-- ADMIN -->
+            <div id="admin" class="tab-content">
+                <div id="admin-login">
+                    <h2 class="section-title">Admin Girişi</h2>
+                    <input type="password" id="admin-password" placeholder="Admin Şifresi" class="admin-input">
+                    <button onclick="loginAdmin()" class="btn-primary full-width">Giriş Yap</button>
+                </div>
+                <div id="admin-panel" class="admin-panel hidden">
+                    <h2 class="section-title">Onay Bekleyen İtiraflar</h2>
+                    <div id="pending-list" class="posts-container"></div>
+                </div>
+            </div>
+
         </main>
     </div>
 
