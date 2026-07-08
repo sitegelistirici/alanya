@@ -13,33 +13,57 @@
 </head>
 <body>
     <div class="app">
+        <!-- HEADER -->
         <header class="header">
             <div class="header-content">
                 <button id="hamburger" class="hamburger">☰</button>
-                <div class="logo">🔥 ALANYA İTİRAF</div>
+                <div class="logo">
+                    <span class="logo-icon">🔥</span>
+                    <span class="logo-text">ALANYA İTİRAF</span>
+                </div>
             </div>
         </header>
 
+        <!-- SIDEBAR -->
         <aside id="sidebar" class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-icon">🔥</span>
+                    <span class="logo-text">ALANYA İTİRAF</span>
+                </div>
+                <button id="close-sidebar" class="close-btn">✕</button>
+            </div>
             <nav class="nav-menu">
                 <a href="#" class="nav-item active" data-tab="home">🏠 Ana Sayfa</a>
                 <a href="#" class="nav-item" data-tab="confessions">📜 İtiraflar</a>
                 <a href="#" class="nav-item" data-tab="submit">✍️ İtiraf Ver</a>
-                <a href="#" class="nav-item" data-tab="polls">📊 Anketler</a>
-                <a href="#" class="nav-item" data-tab="leaders">🏆 Liderler</a>
-                <a href="#" class="nav-item" data-tab="admin">🔑 Admin</a>
+                <a href="#" class="nav-item" data-tab="polls">📊 Aktif Anketler</a>
+                <a href="#" class="nav-item" data-tab="leaders">🏆 En Aktif Kullanıcılar</a>
+                <a href="#" class="nav-item" data-tab="admin">🔑 Admin Panel</a>
             </nav>
         </aside>
 
+        <!-- OVERLAY -->
         <div id="overlay" class="overlay"></div>
 
+        <!-- MAIN CONTENT -->
         <main class="main-content">
-            <div id="home" class="tab-content active">Ana Sayfa İçeriği</div>
-            <div id="confessions" class="tab-content">İtiraflar İçeriği</div>
-            <div id="submit" class="tab-content">İtiraf Ver İçeriği</div>
-            <div id="polls" class="tab-content">Anketler İçeriği</div>
-            <div id="leaders" class="tab-content">Liderler İçeriği</div>
-            <div id="admin" class="tab-content">Admin İçeriği</div>
+            <div id="home" class="tab-content active">
+                <div class="hero">
+                    <h1 class="hero-title">ALANYA İTİRAF SİTEMİZE<br>HOŞ GELDİNİZ</h1>
+                    <p class="hero-subtitle">Şehrimizin en samimi itirafları burada.</p>
+                    <div class="hero-buttons">
+                        <button onclick="switchTab('confessions')" class="btn-primary">İtirafları Oku</button>
+                        <button onclick="switchTab('submit')" class="btn-secondary">İtirafını Bırak</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="confessions" class="tab-content">İtiraflar İçeriği (Henüz boş)</div>
+            <div id="submit" class="tab-content">İtiraf Ver İçeriği (Henüz boş)</div>
+            <div id="polls" class="tab-content">Anketler İçeriği (Henüz boş)</div>
+            <div id="leaders" class="tab-content">Liderler İçeriği (Henüz boş)</div>
+            <div id="admin" class="tab-content">Admin İçeriği (Henüz boş)</div>
         </main>
     </div>
 
