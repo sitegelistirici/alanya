@@ -5,106 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alanya İtiraf Portalı</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-storage-compat.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@700&display=swap');
     </style>
 </head>
 <body>
     <div class="app">
-        <!-- HEADER -->
         <header class="header">
             <div class="header-content">
-                <button id="hamburger" class="hamburger">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
-                <div class="logo">
-                    <span class="logo-icon">🔥</span>
-                    <span class="logo-text">ALANYA İTİRAF</span>
-                </div>
+                <button id="hamburger" class="hamburger">☰</button>
+                <div class="logo">🔥 ALANYA İTİRAF</div>
             </div>
         </header>
 
-        <!-- SIDEBAR -->
         <aside id="sidebar" class="sidebar">
-            <div class="sidebar-header">
-                <div class="logo">
-                    <span class="logo-icon">🔥</span>
-                    <span class="logo-text">ALANYA İTİRAF</span>
-                </div>
-            </div>
             <nav class="nav-menu">
-                <a href="#" data-tab="home" class="nav-item active">🏠 Ana Sayfa</a>
-                <a href="#" data-tab="confessions" class="nav-item">📜 İtiraflar</a>
-                <a href="#" data-tab="submit" class="nav-item">✍️ İtiraf Ver</a>
-                <a href="#" data-tab="polls" class="nav-item">📊 Aktif Anketler</a>
-                <a href="#" data-tab="leaders" class="nav-item">🏆 En Aktif Kullanıcılar</a>
-                <a href="#" data-tab="admin" class="nav-item">🔑 Admin Panel</a>
+                <a href="#" class="nav-item active" data-tab="home">🏠 Ana Sayfa</a>
+                <a href="#" class="nav-item" data-tab="confessions">📜 İtiraflar</a>
+                <a href="#" class="nav-item" data-tab="submit">✍️ İtiraf Ver</a>
+                <a href="#" class="nav-item" data-tab="polls">📊 Anketler</a>
+                <a href="#" class="nav-item" data-tab="leaders">🏆 Liderler</a>
+                <a href="#" class="nav-item" data-tab="admin">🔑 Admin</a>
             </nav>
         </aside>
 
-        <!-- OVERLAY -->
         <div id="overlay" class="overlay"></div>
 
-        <!-- MAIN CONTENT -->
         <main class="main-content">
-            <div id="home" class="tab-content active">
-                <div class="hero">
-                    <h1 class="hero-title">ALANYA İTİRAF SİTEMİZE<br>HOŞ GELDİNİZ</h1>
-                    <p class="hero-subtitle">Şehrimizin en samimi itirafları burada. Anonim ve güvenli.</p>
-                    <div class="hero-buttons">
-                        <button onclick="switchTab('confessions')" class="btn-primary">İtirafları Oku</button>
-                        <button onclick="switchTab('submit')" class="btn-secondary">İtirafını Bırak</button>
-                    </div>
-                </div>
-            </div>
-
-            <div id="confessions" class="tab-content">
-                <h2 class="section-title">Son İtiraflar</h2>
-                <div id="confessions-list" class="posts-container"></div>
-            </div>
-
-            <div id="submit" class="tab-content">
-                <h2 class="section-title">İtirafını Bırak</h2>
-                <div class="submit-form">
-                    <textarea id="post-text" placeholder="İtiraflarını burada yaz... Anonim kalacak." rows="6"></textarea>
-                    <div class="image-upload">
-                        <label for="image-input" class="upload-label">
-                            <span class="upload-icon">📸</span>
-                            <span id="file-name">Görsel ekle (isteğe bağlı)</span>
-                        </label>
-                        <input type="file" id="image-input" accept="image/*" hidden>
-                    </div>
-                    <button onclick="submitPost()" class="btn-primary full-width">İtirafı Gönder</button>
-                </div>
-            </div>
-
-            <div id="polls" class="tab-content">
-                <h2 class="section-title">Aktif Anketler</h2>
-                <div id="polls-list" class="polls-container"></div>
-            </div>
-
-            <div id="leaders" class="tab-content">
-                <h2 class="section-title">En Aktif Kullanıcılar</h2>
-                <div id="leaders-list" class="leaders-table"></div>
-            </div>
-
-            <div id="admin" class="tab-content">
-                <div id="admin-login">
-                    <h2 class="section-title">Admin Girişi</h2>
-                    <input type="password" id="admin-password" placeholder="Şifre" class="admin-input">
-                    <button onclick="loginAdmin()" class="btn-primary">Giriş Yap</button>
-                </div>
-                <div id="admin-panel" class="admin-panel hidden">
-                    <h2 class="section-title">Onay Bekleyen İtiraflar</h2>
-                    <div id="pending-list" class="posts-container"></div>
-                </div>
-            </div>
+            <div id="home" class="tab-content active">Ana Sayfa İçeriği</div>
+            <div id="confessions" class="tab-content">İtiraflar İçeriği</div>
+            <div id="submit" class="tab-content">İtiraf Ver İçeriği</div>
+            <div id="polls" class="tab-content">Anketler İçeriği</div>
+            <div id="leaders" class="tab-content">Liderler İçeriği</div>
+            <div id="admin" class="tab-content">Admin İçeriği</div>
         </main>
     </div>
 
