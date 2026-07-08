@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alanya İtiraf Portalı // CyberNet</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <div class="cyber-grid"></div>
+
+    <header>
+        <div class="logo">
+            <span class="neon-blue">&lt;</span>ALANYA<span class="neon-green">_CONFESS&gt;</span>
+        </div>
+        <nav class="main-nav">
+            <button class="nav-btn active" onclick="switchTab('feed')"><i class="fa-solid fa-fire"></i> Akış</button>
+            <button class="nav-btn" onclick="switchTab('polls')"><i class="fa-solid fa-square-poll-vertical"></i> Anketler</button>
+            <button class="nav-btn" onclick="switchTab('leaderboard')"><i class="fa-solid fa-trophy"></i> Lig Sıralaması</button>
+            <button class="nav-btn admin-trigger" onclick="openAdminModal()"><i class="fa-solid fa-terminal"></i> Terminal</button>
+        </nav>
+    </header>
+
+    <main class="container">
+        
+        <div id="feedTab" class="tab-content active">
+            <section class="cyber-card glass-panel">
+                <div class="card-header">
+                    <h3><i class="fa-solid fa-encryptions"></i> GÜVENLİ VERİ GİRİŞİ (ANONİM)</h3>
+                </div>
+                <form id="confessForm">
+                    <textarea id="confessMessage" placeholder="Alanya'ya dair saklı kalmış bir itiraf bırak... İz bırakma." required></textarea>
+                    <div class="form-footer">
+                        <div class="upload-zone">
+                            <label for="imageInput" class="action-btn secondary-btn">
+                                <i class="fa-solid fa-camera"></i> Kanıt Ekle
+                            </label>
+                            <input type="file" id="imageInput" accept="image/*">
+                            <span id="fileName" class="status-text">Dosya taranmadı</span>
+                        </div>
+                        <button type="submit" id="submitBtn" class="action-btn primary-btn">
+                            <i class="fa-solid fa-paper-plane"></i> AĞA SIZDIR
+                        </button>
+                    </div>
+                </form>
+                <div id="globalStatus" class="status-msg"></div>
+            </section>
+
+            <section class="feed-wrapper">
+                <h4 class="section-title">// ONAYLANMIŞ VERİ AKIŞI [upload_posts]</h4>
+                <div id="uploadPostsFeed">
+                    <div class="terminal-loader">Veri havuzu taranıyor...</div>
+                </div>
+            </section>
+        </div>
+
+        <div id="pollsTab" class="tab-content">
+            <h4 class="section-title">// SİBER OYLAMALAR VE ANKETLER [polls]</h4>
+            <div id="pollsFeed">
+                <div class="terminal-loader">Aktif anket aranıyor...</div>
+            </div>
+        </div>
+
+        <div id="leaderboardTab" class="tab-content">
+            <h4 class="section-title">// AKTİVİTE LİGİ SIRALAMASI [users]</h4>
+            <div class="cyber-card glass-panel">
+                <table class="leaderboard-table">
+                    <thead>
+                        <tr>
+                            <th>Sıra</th>
+                            <th>Kullanıcı Sinyali</th>
+                            <th>Skor (Aktivite)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboardContainer">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+
+    <div id="adminModal" class="modal-overlay">
+        <div class="modal-content glass-panel">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-skull"></i> ADMİN TERMİNAL ERİŞİMİ</h3>
+                <button class="close-btn" onclick="closeAdminModal()">&times;</button>
+            </div>
+            
+            <div id="adminAuthZone">
+                <p class="status-text">// Devam etmek için kriptografik admin şifresini girin.</p>
+                <div class="password-box">
+                    <input type="password" id="adminPassword" placeholder="ACCESS_CODE">
+                    <button onclick="checkAdminAccess()" class="action-btn primary-btn">YETKİLENDİR</button>
+                </div>
+                <div id="authError" class="error-text"></div>
+            </div>
+
+            <div id="adminControlZone" style="display: none;">
+                <h4 class="neon-green">// BEKLEYEN İTİRAFLAR [pending_posts]</h4>
+                <div id="pendingPostsFeed">
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
