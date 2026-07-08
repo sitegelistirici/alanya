@@ -5,9 +5,14 @@
     --primary-hover: #e05e00;
     --text: #ffffff;
     --text-soft: #9ca3af;
+    --border: #1f1f24;
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
 body {
     font-family: 'Inter', system-ui, sans-serif;
@@ -17,16 +22,22 @@ body {
     overflow: hidden;
 }
 
-.app { display: flex; height: 100vh; }
+.app {
+    display: flex;
+    height: 100vh;
+    position: relative;
+}
 
 /* HEADER */
 .header {
     position: fixed;
-    top: 0; left: 0; right: 0;
-    height: 70px;
-    background: rgba(8, 8, 10, 0.95);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid #1f1f24;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 72px;
+    background: rgba(8, 8, 10, 0.98);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
     z-index: 1000;
     display: flex;
     align-items: center;
@@ -39,29 +50,48 @@ body {
     margin: 0 auto;
     display: flex;
     align-items: center;
-    gap: 24px;
+    gap: 20px;
 }
 
 .hamburger {
     background: none;
     border: none;
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     gap: 6px;
     cursor: pointer;
-    padding: 8px;
+    padding: 10px;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.hamburger:hover {
+    background: rgba(255, 107, 0, 0.1);
 }
 
 .hamburger span {
     display: block;
-    height: 2.5px;
-    width: 24px;
-    background: white;
-    border-radius: 2px;
+    height: 2.8px;
+    width: 26px;
+    background: var(--text);
+    border-radius: 3px;
     transition: all 0.3s ease;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+.logo-icon {
+    font-size: 30px;
 }
 
 /* SIDEBAR */
@@ -71,75 +101,167 @@ body {
     left: -320px;
     width: 280px;
     height: 100vh;
-    background: #0c0c0f;
-    border-right: 1px solid #1f1f24;
+    background: #0a0a0d;
+    border-right: 1px solid var(--border);
     z-index: 2000;
-    transition: left 0.4s cubic-bezier(0.32, 0.72, 0, 1);
-    padding-top: 70px;
+    transition: left 0.45s cubic-bezier(0.32, 0.72, 0, 1);
+    padding-top: 80px;
+    box-shadow: 4px 0 30px rgba(0, 0, 0, 0.6);
 }
 
-.sidebar.open { left: 0; }
+.sidebar.open {
+    left: 0;
+}
 
 .sidebar-header {
-    padding: 20px 24px;
+    padding: 0 24px 24px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid #1f1f24;
 }
 
 .close-btn {
     background: none;
     border: none;
-    font-size: 28px;
-    color: #888;
+    font-size: 32px;
+    color: var(--text-soft);
     cursor: pointer;
-    padding: 5px 12px;
-    transition: all 0.2s;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    transition: all 0.3s ease;
 }
 
 .close-btn:hover {
-    color: #ff6b00;
-    transform: rotate(90deg);
+    color: var(--primary);
+    background: rgba(255,107,0,0.1);
 }
 
-/* Diğer stiller (önceki CSS'in kalan kısmı) */
+.nav-menu {
+    padding: 10px 0;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 28px;
+    color: var(--text-soft);
+    text-decoration: none;
+    font-size: 16.5px;
+    font-weight: 500;
+    transition: all 0.25s ease;
+}
+
+.nav-item:hover,
+.nav-item.active {
+    background: rgba(255, 107, 0, 0.12);
+    color: var(--primary);
+}
+
+/* OVERLAY */
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(6px);
+    z-index: 1500;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.4s ease;
+}
+
+.overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* MAIN CONTENT */
 .main-content {
     flex: 1;
-    margin-left: 0;
-    padding: 90px 32px 40px;
+    padding: 88px 28px 40px;
     overflow-y: auto;
+    background: var(--bg);
 }
 
-.tab-content { display: none; }
-.tab-content.active { display: block; }
-
-.hero {
-    text-align: center;
-    padding: 80px 20px;
+.tab-content {
+    display: none;
+    animation: fadeIn 0.4s ease forwards;
 }
 
-.hero-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 48px;
-    line-height: 1.1;
-    margin-bottom: 20px;
+.tab-content.active {
+    display: block;
 }
 
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Butonlar - Modern */
 .btn-primary, .btn-secondary {
-    padding: 14px 32px;
+    padding: 15px 34px;
     border-radius: 9999px;
     font-weight: 600;
+    font-size: 16px;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    border: none;
 }
 
 .btn-primary {
     background: var(--primary);
     color: white;
-    border: none;
+    box-shadow: 0 4px 15px rgba(255, 107, 0, 0.3);
 }
 
-.btn-primary:hover { background: var(--primary-hover); transform: scale(0.97); }
+.btn-primary:hover {
+    background: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(255, 107, 0, 0.4);
+}
 
-/* ... kalan CSS stillerini önceki mesajdan kopyalayabilirsiniz ... */
+.btn-secondary {
+    background: transparent;
+    color: var(--text);
+    border: 2px solid #333;
+}
+
+.btn-secondary:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .main-content {
+        padding: 88px 16px 30px;
+    }
+    
+    .hero-title {
+        font-size: 42px;
+    }
+}
+
+.hero {
+    text-align: center;
+    padding: 60px 20px 100px;
+}
+
+.hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 52px;
+    line-height: 1.05;
+    margin-bottom: 20px;
+}
+
+.hero-subtitle {
+    font-size: 19px;
+    color: var(--text-soft);
+    max-width: 580px;
+    margin: 0 auto 40px;
+}
