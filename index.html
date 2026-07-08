@@ -5,120 +5,136 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alanya İtiraf Portalı</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-storage-compat.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@700&display=swap');
+    </style>
 </head>
 <body>
-
-    <header class="main-header">
-        <button class="menu-toggle-btn" onclick="toggleSidebar()">
-            <i class="fa-solid fa-bars"></i>
-        </button>
-        <div class="logo">ALANYA<span class="orange-text">_ITIRAF</span></div>
-        <div style="width: 40px;"></div> </header>
-
-    <div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
-    <nav id="sidebar" class="sidebar-nav">
-        <div class="sidebar-header">
-            <h3>NAVİGASYON</h3>
-            <button class="close-sidebar-btn" onclick="toggleSidebar()">&times;</button>
-        </div>
-        <ul class="menu-list">
-            <li class="menu-item active" onclick="switchTab('welcome')"><i class="fa-solid fa-house"></i> Ana Sayfa</li>
-            <li class="menu-item" onclick="switchTab('feed')"><i class="fa-solid fa-comment-dots"></i> İtiraflar</li>
-            <li class="menu-item" onclick="switchTab('send')"><i class="fa-solid fa-paper-plane"></i> İtiraf Ver</li>
-            <li class="menu-item" onclick="switchTab('polls')"><i class="fa-solid fa-chart-bar"></i> Aktif Anketler</li>
-            <li class="menu-item" onclick="switchTab('leaderboard')"><i class="fa-solid fa-trophy"></i> En Aktif Kullanıcılar</li>
-            <li class="menu-item admin-link" onclick="switchTab('admin')"><i class="fa-solid fa-user-shield"></i> Admin Paneli</li>
-        </ul>
-    </nav>
-
-    <main class="main-container">
-
-        <div id="welcomeTab" class="tab-layer active">
-            <div class="welcome-hero">
-                <h1>ALANYA İTİRAF SİTEMİZE HOŞ GELDİNİZ</h1>
-                <p>Burası Alanya'nın en gizli, en samimi ve tamamen anonim itiraf platformudur. İçinizde tutamadığınız tüm sırları iz bırakmadan paylaşabilir, siber ligde üst sıralara tırmanabilir ya da şehirdeki anketlerde sesinizi duyurabilirsiniz.</p>
-                <div class="welcome-actions">
-                    <button class="btn-modern btn-orange" onclick="switchTab('feed')">İtirafları Oku</button>
-                    <button class="btn-modern btn-outline" onclick="switchTab('send')">İtirafını Bırak</button>
+    <div class="app">
+        <!-- HEADER -->
+        <header class="header">
+            <div class="header-content">
+                <button id="hamburger" class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <div class="logo">
+                    <span class="logo-icon">🔥</span>
+                    <span class="logo-text">ALANYA İTİRAF</span>
                 </div>
             </div>
-        </div>
+        </header>
 
-        <div id="feedTab" class="tab-layer">
-            <h2 class="page-title">// CANLI İTİRAF AKIŞI [approved_posts]</h2>
-            <div id="uploadPostsFeed">
-                <div class="loader-text">Ağ sinyalleri taranıyor...</div>
-            </div>
-        </div>
-
-        <div id="sendTab" class="tab-layer">
-            <h2 class="page-title">// GÜVENLİ HAT İTİRAF GİRİŞİ [pending_posts]</h2>
-            <div class="premium-card">
-                <form id="confessForm">
-                    <textarea id="confessMessage" placeholder="Alanya'ya dair saklı kalmış sırrını buraya güvenle yaz..." required></textarea>
-                    <div class="form-footer">
-                        <div class="file-wrapper">
-                            <label for="imageInput" class="btn-modern btn-outline">
-                                <i class="fa-solid fa-image"></i> Kanıt Ekle
-                            </label>
-                            <input type="file" id="imageInput" accept="image/*">
-                            <span id="fileName" class="soft-text">Dosya taranmadı</span>
-                        </div>
-                        <button type="submit" id="submitBtn" class="btn-modern btn-orange">AĞA SIZDIR</button>
-                    </div>
-                </form>
-                <div id="globalStatus" class="status-indicator"></div>
-            </div>
-        </div>
-
-        <div id="pollsTab" class="tab-layer">
-            <h2 class="page-title">// AKTİF OYLAMALAR [polls]</h2>
-            <div id="pollsFeed">
-                <div class="loader-text">Anket havuzu yükleniyor...</div>
-            </div>
-        </div>
-
-        <div id="leaderboardTab" class="tab-layer">
-            <h2 class="page-title">// LİG SIRALAMASI [users]</h2>
-            <div class="premium-card">
-                <table class="modern-table">
-                    <thead>
-                        <tr>
-                            <th>Sıra</th>
-                            <th>Kullanıcı Adı</th>
-                            <th>Aktivite Skoru</th>
-                        </tr>
-                    </thead>
-                    <tbody id="leaderboardContainer">
-                        </tbody>
-                </table>
-            </div>
-        </div>
-
-        <div id="adminTab" class="tab-layer">
-            <h2 class="page-title">// TERMİNAL YÖNETİM MERKEZİ [admin_config]</h2>
-            
-            <div id="adminAuthZone" class="premium-card text-center">
-                <p class="soft-text" style="margin-bottom: 20px;">Yönetim paneline erişmek için şifrenizi doğrulayın:</p>
-                <div class="auth-flex">
-                    <input type="password" id="adminPassword" placeholder="Yönetici Şifresi...">
-                    <button onclick="checkAdminAccess()" class="btn-modern btn-orange">ERİŞİM SAĞLA</button>
+        <!-- SIDEBAR -->
+        <aside id="sidebar" class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-icon">🔥</span>
+                    <span class="logo-text">ALANYA İTİRAF</span>
                 </div>
-                <div id="authError" class="error-msg"></div>
             </div>
+            <nav class="nav-menu">
+                <a href="#" data-tab="home" class="nav-item active">
+                    <span class="nav-icon">🏠</span>
+                    <span class="nav-text">Ana Sayfa</span>
+                </a>
+                <a href="#" data-tab="confessions" class="nav-item">
+                    <span class="nav-icon">📜</span>
+                    <span class="nav-text">İtiraflar</span>
+                </a>
+                <a href="#" data-tab="submit" class="nav-item">
+                    <span class="nav-icon">✍️</span>
+                    <span class="nav-text">İtiraf Ver</span>
+                </a>
+                <a href="#" data-tab="polls" class="nav-item">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-text">Aktif Anketler</span>
+                </a>
+                <a href="#" data-tab="leaders" class="nav-item">
+                    <span class="nav-icon">🏆</span>
+                    <span class="nav-text">En Aktif Kullanıcılar</span>
+                </a>
+                <a href="#" data-tab="admin" class="nav-item">
+                    <span class="nav-icon">🔑</span>
+                    <span class="nav-text">Admin Panel</span>
+                </a>
+            </nav>
+        </aside>
 
-            <div id="adminControlZone" style="display: none;">
-                <div class="admin-dashboard-title">ONAY BEKLEYEN VERİLER [pending_posts]</div>
-                <div id="pendingPostsFeed">
+        <!-- OVERLAY -->
+        <div id="overlay" class="overlay"></div>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+            <!-- HOME -->
+            <div id="home" class="tab-content active">
+                <div class="hero">
+                    <h1 class="hero-title">ALANYA İTİRAF SİTEMİZE<br>HOŞ GELDİNİZ</h1>
+                    <p class="hero-subtitle">Şehrimizin en samimi, en cesur ve en gizli itirafları burada. Anonim, güvenli ve gerçek.</p>
+                    <div class="hero-buttons">
+                        <button onclick="switchTab('confessions')" class="btn-primary">İtirafları Oku</button>
+                        <button onclick="switchTab('submit')" class="btn-secondary">İtirafını Bırak</button>
                     </div>
+                </div>
             </div>
-        </div>
 
-    </main>
+            <!-- İTİRAFLAR -->
+            <div id="confessions" class="tab-content">
+                <h2 class="section-title">Son İtiraflar</h2>
+                <div id="confessions-list" class="posts-container"></div>
+            </div>
 
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+            <!-- İTİRAF VER -->
+            <div id="submit" class="tab-content">
+                <h2 class="section-title">İtirafını Bırak</h2>
+                <div class="submit-form">
+                    <textarea id="post-text" placeholder="İtiraflarını burada yaz... Anonim kalacak." rows="6"></textarea>
+                    
+                    <div class="image-upload">
+                        <label for="image-input" class="upload-label">
+                            <span class="upload-icon">📸</span>
+                            <span id="file-name">Görsel ekle (isteğe bağlı)</span>
+                        </label>
+                        <input type="file" id="image-input" accept="image/*" hidden>
+                    </div>
+                    
+                    <button onclick="submitPost()" class="btn-primary full-width">İtirafı Gönder</button>
+                </div>
+            </div>
+
+            <!-- ANKETLER -->
+            <div id="polls" class="tab-content">
+                <h2 class="section-title">Aktif Anketler</h2>
+                <div id="polls-list" class="polls-container"></div>
+            </div>
+
+            <!-- LİDERLİK -->
+            <div id="leaders" class="tab-content">
+                <h2 class="section-title">En Aktif Kullanıcılar</h2>
+                <div id="leaders-list" class="leaders-table"></div>
+            </div>
+
+            <!-- ADMIN -->
+            <div id="admin" class="tab-content">
+                <div id="admin-login">
+                    <h2 class="section-title">Admin Girişi</h2>
+                    <input type="password" id="admin-password" placeholder="Şifre" class="admin-input">
+                    <button onclick="loginAdmin()" class="btn-primary">Giriş Yap</button>
+                </div>
+                
+                <div id="admin-panel" class="admin-panel hidden">
+                    <h2 class="section-title">Onay Bekleyen İtiraflar</h2>
+                    <div id="pending-list" class="posts-container"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
     <script src="app.js"></script>
 </body>
 </html>
