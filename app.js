@@ -21,21 +21,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeBtn = document.getElementById('close-sidebar');
     const overlay = document.getElementById('overlay');
 
-    // Hamburger aç
     hamburger.addEventListener('click', () => {
         document.getElementById('sidebar').classList.add('open');
         overlay.classList.add('active');
     });
 
-    // Çarpı ile kapat
-    if (closeBtn) {
-        closeBtn.addEventListener('click', closeSidebar);
-    }
-
-    // Overlay tıklayınca kapat
+    closeBtn.addEventListener('click', closeSidebar);
     overlay.addEventListener('click', closeSidebar);
 
-    // Menü linkleri
     document.querySelectorAll('.nav-item').forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
@@ -44,5 +37,5 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    console.log("✅ Sidebar ve butonlar aktif");
+    console.log("✅ Sidebar sistemi aktif");
 });
