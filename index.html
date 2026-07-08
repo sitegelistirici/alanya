@@ -3,70 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alanya İtiraf Portalı // CyberNet</title>
+    <title>Alanya İtiraf Portalı // HubNet</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
-    <div class="cyber-grid"></div>
-
+    <!-- Üst Menü / Navbar -->
     <header>
         <div class="logo">
-            <span class="neon-blue">&lt;</span>ALANYA<span class="neon-green">_CONFESS&gt;</span>
+            ALANYA<span class="orange-text">_ITIRAF</span>
         </div>
         <nav class="main-nav">
-            <button class="nav-btn active" onclick="switchTab('feed')"><i class="fa-solid fa-fire"></i> Akış</button>
-            <button class="nav-btn" onclick="switchTab('polls')"><i class="fa-solid fa-square-poll-vertical"></i> Anketler</button>
-            <button class="nav-btn" onclick="switchTab('leaderboard')"><i class="fa-solid fa-trophy"></i> Lig Sıralaması</button>
-            <button class="nav-btn admin-trigger" onclick="openAdminModal()"><i class="fa-solid fa-terminal"></i> Terminal</button>
+            <button class="nav-btn active" onclick="switchTab('feed')"><i class="fa-solid fa-bolt"></i> İtiraflar</button>
+            <button class="nav-btn" onclick="switchTab('polls')"><i class="fa-solid fa-chart-simple"></i> Anketler</button>
+            <button class="nav-btn" onclick="switchTab('leaderboard')"><i class="fa-solid fa-crown"></i> Lig Sıralaması</button>
+            <button class="nav-btn admin-trigger" onclick="openAdminModal()"><i class="fa-solid fa-lock"></i> Yönetim</button>
         </nav>
     </header>
 
     <main class="container">
         
+        <!-- 1. İTİRAFLAR SEKMESİ -->
         <div id="feedTab" class="tab-content active">
-            <section class="cyber-card glass-panel">
-                <div class="card-header">
-                    <h3><i class="fa-solid fa-encryptions"></i> GÜVENLİ VERİ GİRİŞİ (ANONİM)</h3>
-                </div>
+            <!-- İtiraf Giriş Kartı -->
+            <section class="premium-card">
+                <div class="card-title">// ANONİM İTİRAF PANELDİR</div>
                 <form id="confessForm">
-                    <textarea id="confessMessage" placeholder="Alanya'ya dair saklı kalmış bir itiraf bırak... İz bırakma." required></textarea>
+                    <textarea id="confessMessage" placeholder="Alanya'ya dair saklı kalmış bir şeyler fısılda..." required></textarea>
                     <div class="form-footer">
-                        <div class="upload-zone">
-                            <label for="imageInput" class="action-btn secondary-btn">
-                                <i class="fa-solid fa-camera"></i> Kanıt Ekle
+                        <div class="file-wrapper">
+                            <label for="imageInput" class="btn-modern btn-outline">
+                                <i class="fa-solid fa-paperclip"></i> Görsel Ekle
                             </label>
                             <input type="file" id="imageInput" accept="image/*">
-                            <span id="fileName" class="status-text">Dosya taranmadı</span>
+                            <span id="fileName" class="soft-text">Dosya seçilmedi</span>
                         </div>
-                        <button type="submit" id="submitBtn" class="action-btn primary-btn">
-                            <i class="fa-solid fa-paper-plane"></i> AĞA SIZDIR
+                        <button type="submit" id="submitBtn" class="btn-modern btn-orange">
+                            <i class="fa-solid fa-paper-plane"></i> GÖNDER
                         </button>
                     </div>
                 </form>
-                <div id="globalStatus" class="status-msg"></div>
+                <div id="globalStatus" class="status-indicator"></div>
             </section>
 
-            <section class="feed-wrapper">
-                <h4 class="section-title">// ONAYLANMIŞ VERİ AKIŞI [upload_posts]</h4>
+            <!-- Onaylanmış İtiraflar Akışı -->
+            <section class="feed-section">
+                <div class="section-badge">YAYINLANANLAR [upload_posts]</div>
                 <div id="uploadPostsFeed">
-                    <div class="terminal-loader">Veri havuzu taranıyor...</div>
+                    <div class="pulse-loader">Veri havuzu senkronize ediliyor...</div>
                 </div>
             </section>
         </div>
 
+        <!-- 2. ANKETLER SEKMESİ -->
         <div id="pollsTab" class="tab-content">
-            <h4 class="section-title">// SİBER OYLAMALAR VE ANKETLER [polls]</h4>
+            <div class="section-badge">AKTİF ANKETLER VE OYLAMALAR [polls]</div>
             <div id="pollsFeed">
-                <div class="terminal-loader">Aktif anket aranıyor...</div>
+                <div class="pulse-loader">Anket verileri yükleniyor...</div>
             </div>
         </div>
 
+        <!-- 3. LİDERLİK TABLOSU SEKMESİ -->
         <div id="leaderboardTab" class="tab-content">
-            <h4 class="section-title">// AKTİVİTE LİGİ SIRALAMASI [users]</h4>
-            <div class="cyber-card glass-panel">
-                <table class="leaderboard-table">
+            <div class="section-badge">AKTİVİTE SKOR LİGİ [users]</div>
+            <div class="premium-card">
+                <table class="modern-table">
                     <thead>
                         <tr>
                             <th>Sıra</th>
@@ -75,37 +77,43 @@
                         </tr>
                     </thead>
                     <tbody id="leaderboardContainer">
-                        </tbody>
+                        <!-- JS ile dolacak -->
+                    </tbody>
                 </table>
             </div>
         </div>
 
     </main>
 
+    <!-- ADMİN YÖNETİM PANEL MODALI -->
     <div id="adminModal" class="modal-overlay">
-        <div class="modal-content glass-panel">
+        <div class="modal-card">
             <div class="modal-header">
-                <h3><i class="fa-solid fa-skull"></i> ADMİN TERMİNAL ERİŞİMİ</h3>
-                <button class="close-btn" onclick="closeAdminModal()">&times;</button>
+                <h3><i class="fa-solid fa-shield-halved"></i> TERMİNAL DOĞRULAMA</h3>
+                <button class="close-modal-btn" onclick="closeAdminModal()">&times;</button>
             </div>
             
+            <!-- Admin Giriş Ekranı -->
             <div id="adminAuthZone">
-                <p class="status-text">// Devam etmek için kriptografik admin şifresini girin.</p>
-                <div class="password-box">
-                    <input type="password" id="adminPassword" placeholder="ACCESS_CODE">
-                    <button onclick="checkAdminAccess()" class="action-btn primary-btn">YETKİLENDİR</button>
+                <p class="soft-text" style="margin-bottom: 15px;">Kritik işlemleri yönetmek için admin şifresini giriniz:</p>
+                <div class="auth-box">
+                    <input type="password" id="adminPassword" placeholder="Şifre Girin...">
+                    <button onclick="checkAdminAccess()" class="btn-modern btn-orange">GİRİŞ YAP</button>
                 </div>
-                <div id="authError" class="error-text"></div>
+                <div id="authError" class="error-msg"></div>
             </div>
 
+            <!-- Yönetim Alanı (Doğrulanınca Açılır) -->
             <div id="adminControlZone" style="display: none;">
-                <h4 class="neon-green">// BEKLEYEN İTİRAFLAR [pending_posts]</h4>
+                <div class="section-badge orange-badge">ONAY BEKLEYEN İTİRAFLAR [pending_posts]</div>
                 <div id="pendingPostsFeed">
-                    </div>
+                    <!-- Onay bekleyen listesi -->
+                </div>
             </div>
         </div>
     </div>
 
+    <!-- Firebase Modülleri -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script src="app.js"></script>
