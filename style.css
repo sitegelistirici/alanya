@@ -1,152 +1,453 @@
+/* style.css */
 :root {
-    --bg-black: #08080a;
-    --bg-card: #121216;
-    --orange: #ff6b00;
-    --orange-hover: #e05e00;
-    --orange-glow: rgba(255, 107, 0, 0.2);
-    --text-white: #ffffff;
+    --bg: #08080a;
+    --card: #121216;
+    --primary: #ff6b00;
+    --primary-hover: #e05e00;
+    --text: #ffffff;
     --text-soft: #9ca3af;
-    --border: #22222a;
 }
 
 * {
-    margin: 0; padding: 0; box-sizing: border-box;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 body {
-    background-color: var(--bg-black);
-    color: var(--text-white);
-    -webkit-font-smoothing: antialiased;
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    overflow: hidden;
+    height: 100vh;
 }
 
-/* Üst Sabit Header */
-.main-header {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 15px 25px; background: #000; border-bottom: 1px solid var(--border);
-    position: sticky; top: 0; z-index: 99; height: 65px;
+.app {
+    display: flex;
+    height: 100vh;
 }
-.logo { font-size: 1.3rem; font-weight: 800; letter-spacing: -0.5px; }
-.orange-text { color: var(--orange); }
 
-.menu-toggle-btn {
-    background: transparent; border: none; color: #fff;
-    font-size: 1.4rem; cursor: pointer; padding: 5px; transition: color 0.2s;
+/* HEADER */
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 70px;
+    background: rgba(8, 8, 10, 0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid #1f1f24;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
 }
-.menu-toggle-btn:hover { color: var(--orange); }
 
-/* Sol Kayıp Açılan Yan Menü (Sidebar) */
-.sidebar-nav {
-    position: fixed; top: 0; left: -300px; width: 280px; height: 100%;
-    background: #000; border-right: 1px solid var(--border); z-index: 1000;
-    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1); padding: 25px 20px;
+.header-content {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 24px;
 }
-.sidebar-nav.active { left: 0; }
+
+.hamburger {
+    background: none;
+    border: none;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 6px 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.hamburger span {
+    display: block;
+    height: 2.5px;
+    width: 24px;
+    background: var(--text);
+    border-radius: 2px;
+    transition: all 0.3s ease;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+.logo-icon {
+    font-size: 28px;
+}
+
+.logo-text {
+    background: linear-gradient(90deg, #ff6b00, #ff9a3d);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* SIDEBAR */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: -320px;
+    width: 280px;
+    height: 100vh;
+    background: #0c0c0f;
+    border-right: 1px solid #1f1f24;
+    z-index: 2000;
+    transition: left 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+    padding-top: 80px;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar.open {
+    left: 0;
+}
 
 .sidebar-header {
-    display: flex; justify-content: space-between; align-items: center;
-    margin-bottom: 30px; padding-bottom: 15px; border-bottom: 1px solid var(--border);
+    padding: 0 24px 32px;
+    border-bottom: 1px solid #1f1f24;
 }
-.sidebar-header h3 { font-size: 0.85rem; color: var(--text-soft); letter-spacing: 1px; }
-.close-sidebar-btn { background: transparent; border: none; color: #fff; font-size: 2rem; cursor: pointer; }
 
-.menu-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
-.menu-item {
-    display: flex; align-items: center; gap: 15px; padding: 14px 18px;
-    color: var(--text-soft); font-weight: 600; font-size: 0.95rem;
-    border-radius: 10px; cursor: pointer; transition: all 0.2s ease;
+.nav-menu {
+    flex: 1;
+    padding: 16px 0;
 }
-.menu-item:hover, .menu-item.active {
-    color: var(--text-white); background: var(--bg-card);
-}
-.menu-item.active { border-left: 3px solid var(--orange); border-radius: 0 10px 10px 0; padding-left: 15px; }
-.admin-link { color: #f87171; }
-.admin-link:hover { background: rgba(248, 113, 113, 0.08); }
 
-/* Arka Plan Karartma Filtresi */
-.sidebar-overlay {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 999;
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 28px;
+    color: var(--text-soft);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    font-weight: 500;
+}
+
+.nav-item:hover,
+.nav-item.active {
+    background: rgba(255, 107, 0, 0.1);
+    color: var(--primary);
+}
+
+.nav-icon {
+    font-size: 22px;
+    width: 28px;
+}
+
+/* OVERLAY */
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+    z-index: 1500;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* MAIN CONTENT */
+.main-content {
+    flex: 1;
+    margin-left: 0;
+    padding: 90px 32px 40px;
+    overflow-y: auto;
+    background: var(--bg);
+    width: 100%;
+}
+
+.tab-content {
     display: none;
-}
-.sidebar-overlay.active { display: block; }
-
-/* Ana Konteyner ve Katman Yapısı */
-.main-container { max-width: 650px; margin: 30px auto; padding: 0 20px; }
-.tab-layer { display: none; animation: fadeIn 0.3s ease; }
-.tab-layer.active { display: block; }
-
-@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-
-.page-title { font-size: 0.85rem; font-weight: 700; color: var(--text-soft); margin-bottom: 20px; letter-spacing: 0.5px; }
-
-/* Hoş Geldiniz Giriş Alanı */
-.welcome-hero {
-    text-align: center; padding: 40px 20px; background: var(--bg-card);
-    border: 1px solid var(--border); border-radius: 20px; margin-top: 20px;
-}
-.welcome-hero h1 { font-size: 1.6rem; font-weight: 800; margin-bottom: 15px; line-height: 1.3; }
-.welcome-hero p { font-size: 0.95rem; color: var(--text-soft); line-height: 1.6; margin-bottom: 30px; }
-.welcome-actions { display: flex; gap: 12px; justify-content: center; }
-
-/* Premium Kartlar */
-.premium-card {
-    background: var(--bg-card); border: 1px solid var(--border);
-    border-radius: 16px; padding: 24px; margin-bottom: 25px;
+    max-width: 900px;
+    margin: 0 auto;
 }
 
-textarea {
-    width: 100%; height: 110px; background: #000; border: 1px solid var(--border);
-    border-radius: 12px; padding: 16px; color: #fff; resize: none; font-size: 0.98rem;
-    outline: none; transition: border-color 0.2s;
+.tab-content.active {
+    display: block;
+    animation: fadeIn 0.4s ease forwards;
 }
-textarea:focus { border-color: var(--orange); box-shadow: 0 0 12px var(--orange-glow); }
-.form-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; }
 
-/* Buton Oran ve Tasarımları */
-.btn-modern {
-    padding: 12px 24px; border-radius: 10px; font-size: 0.9rem; font-weight: 700;
-    cursor: pointer; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); border: none;
-    display: inline-flex; align-items: center; gap: 8px; justify-content: center;
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
-.btn-modern:active { transform: scale(0.97); }
 
-.btn-orange { background: var(--orange); color: #000; }
-.btn-orange:hover { background: var(--orange-hover); }
-.btn-outline { background: transparent; color: #fff; border: 1px solid var(--border); }
-.btn-outline:hover { background: var(--border); }
-.btn-danger { background: rgba(239, 68, 68, 0.1); color: #f87171; }
-.btn-danger:hover { background: #ef4444; color: #000; }
-
-/* Listeleme Post Kartları */
-.post-wrapper { padding: 0; overflow: hidden; }
-.post-header { padding: 20px 20px 0 20px; font-size: 0.75rem; color: var(--text-soft); }
-.post-body { padding: 12px 20px 20px 20px; font-size: 1.02rem; line-height: 1.5; }
-.post-img { width: 100%; max-height: 450px; object-fit: cover; border-top: 1px solid var(--border); }
-
-/* Tablo */
-.modern-table { width: 100%; border-collapse: collapse; }
-.modern-table th, .modern-table td { padding: 16px; text-align: left; border-bottom: 1px solid var(--border); }
-.modern-table th { color: var(--orange); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; }
-
-/* Anket Grubu */
-.poll-btn {
-    width: 100%; text-align: left; padding: 16px; background: #000;
-    border: 1px solid var(--border); border-radius: 12px; color: #fff;
-    font-weight: 600; cursor: pointer; position: relative; overflow: hidden; margin-top: 10px;
+/* HERO */
+.hero {
+    text-align: center;
+    padding: 80px 20px 120px;
 }
-.poll-fill { position: absolute; top: 0; left: 0; height: 100%; background: rgba(255, 107, 0, 0.12); transition: width 0.5s ease; }
-.poll-content { position: relative; z-index: 1; display: flex; justify-content: space-between; }
 
-/* Admin İç Panel */
-.auth-flex { display: flex; gap: 10px; }
-.auth-flex input { background: #000; border: 1px solid var(--border); padding: 14px; color: #fff; border-radius: 10px; flex: 1; outline: none; }
-.auth-flex input:focus { border-color: var(--orange); }
-.admin-dashboard-title { font-size: 0.9rem; font-weight: 700; color: var(--orange); margin: 25px 0 15px 0; }
-.admin-raw { border: 1px solid var(--border); padding: 18px; border-radius: 12px; margin-bottom: 15px; background: #000; }
-.admin-actions { display: flex; gap: 10px; margin-top: 15px; }
+.hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 52px;
+    line-height: 1.1;
+    margin-bottom: 24px;
+    background: linear-gradient(90deg, #fff, #ddd);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
 
-input[type="file"] { display: none; }
-.soft-text { font-size: 0.8rem; color: var(--text-soft); }
-.error-msg { color: #f87171; font-size: 0.85rem; margin-top: 12px; font-weight: 600; }
-.loader-text { color: var(--text-soft); font-size: 0.9rem; padding: 20px 0; }
+.hero-subtitle {
+    font-size: 20px;
+    color: var(--text-soft);
+    max-width: 620px;
+    margin: 0 auto 48px;
+    line-height: 1.5;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* BUTTONS */
+.btn-primary,
+.btn-secondary {
+    padding: 14px 32px;
+    border-radius: 9999px;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--primary-hover);
+    transform: scale(0.97);
+}
+
+.btn-secondary {
+    background: transparent;
+    color: var(--text);
+    border: 1.5px solid #333;
+}
+
+.btn-secondary:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.full-width {
+    width: 100%;
+}
+
+/* POSTS */
+.posts-container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.post-card {
+    background: var(--card);
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid #1f1f24;
+    transition: transform 0.2s ease;
+}
+
+.post-card:hover {
+    transform: translateY(-4px);
+}
+
+.post-image {
+    width: 100%;
+    height: 320px;
+    object-fit: cover;
+}
+
+.post-content {
+    padding: 24px;
+}
+
+.post-text {
+    font-size: 18px;
+    line-height: 1.6;
+    margin-bottom: 16px;
+    white-space: pre-wrap;
+}
+
+.post-time {
+    font-size: 13px;
+    color: var(--text-soft);
+}
+
+/* ADMIN POSTS */
+.admin-post {
+    border: 2px solid #ff6b00;
+}
+
+/* FORM */
+.submit-form {
+    background: var(--card);
+    padding: 40px;
+    border-radius: 20px;
+    border: 1px solid #1f1f24;
+}
+
+#post-text {
+    width: 100%;
+    background: #1a1a1f;
+    border: 1px solid #333;
+    border-radius: 16px;
+    padding: 20px;
+    color: white;
+    font-size: 17px;
+    resize: vertical;
+    margin-bottom: 20px;
+}
+
+#post-text:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+.upload-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #1a1a1f;
+    border: 2px dashed #444;
+    border-radius: 16px;
+    padding: 24px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.upload-label:hover {
+    border-color: var(--primary);
+    background: rgba(255, 107, 0, 0.05);
+}
+
+/* POLLS */
+.poll-card {
+    background: var(--card);
+    padding: 28px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+}
+
+.poll-question {
+    font-size: 20px;
+    margin-bottom: 24px;
+}
+
+.poll-option {
+    margin-bottom: 18px;
+    cursor: pointer;
+}
+
+.poll-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 15px;
+}
+
+.poll-bar {
+    height: 10px;
+    background: #222;
+    border-radius: 9999px;
+    overflow: hidden;
+}
+
+.poll-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), #ff9a3d);
+    transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    border-radius: 9999px;
+}
+
+/* LEADERS */
+.leaders-table {
+    background: var(--card);
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.leader-row {
+    display: flex;
+    align-items: center;
+    padding: 20px 28px;
+    border-bottom: 1px solid #1f1f24;
+}
+
+.leader-row:last-child {
+    border-bottom: none;
+}
+
+.rank {
+    width: 50px;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.leader-name {
+    flex: 1;
+    font-size: 18px;
+}
+
+.leader-score {
+    font-weight: 600;
+    color: #ffd700;
+}
+
+/* ADMIN INPUT */
+.admin-input {
+    width: 100%;
+    padding: 16px 20px;
+    background: #1a1a1f;
+    border: 1px solid #444;
+    border-radius: 12px;
+    color: white;
+    font-size: 17px;
+    margin-bottom: 16px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.section-title {
+    font-size: 28px;
+    margin-bottom: 32px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #222;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .main-content {
+        padding: 90px 16px 40px;
+    }
+    
+    .hero-title {
+        font-size: 42px;
+    }
+}
