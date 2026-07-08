@@ -1,4 +1,3 @@
-// Sağladığın Resmi ve Güncel Firebase Config Entegrasyonu
 const firebaseConfig = {
   apiKey: "AIzaSyB4zaHiwLkN7XM4aBnMp16nUuCD-ghJ7JA",
   authDomain: "alanya-itiraf-site.firebaseapp.com",
@@ -15,27 +14,38 @@ const db = firebase.firestore();
 const IMGBB_API_KEY = '26385eefa0d44dc1f5bad224ced5d83d';
 let isAdminAuthenticated = false;
 
-// DOM Elementleri
-const confessForm = document.getElementById('confessForm');
-const confessMessage = document.getElementById('confessMessage');
-const imageInput = document.getElementById('imageInput');
-const fileName = document.getElementById('fileName');
-const submitBtn = document.getElementById('submitBtn');
-const globalStatus = document.getElementById('globalStatus');
-
-imageInput.addEventListener('change', (e) => {
-    if(e.target.files.length > 0) fileName.textContent = e.target.files[0].name;
-});
-
-// Sekme Mantığı (Tab Control)
-function switchTab(tabName) {
-    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-    document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
-    document.getElementById(`${tabName}Tab`).classList.add('active');
-    event.currentTarget.classList.add('active');
+// Yan Menü Aç/Kapat Kontrolcüleri
+function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('active');
+    document.getElementById('sidebarOverlay').classList.toggle('active');
 }
 
-// Görsel Yükleyici (ImgBB)
+// Sekmeler Arası Tam Geçiş (Tab Manager)
+function switchTab(tabId) {
+    document.querySelectorAll('.tab-layer').forEach(layer => layer.classList.remove('active'));
+    document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
+    
+    document.getElementById(`${tabId}Tab`).classList.add('active');
+    
+    // Aktif olan menü butonunu renklendir
+    const targetItem = Array.from(document.querySelectorAll('.menu-item')).find(item => item.getAttribute('onclick').includes(tabId));
+    if (targetItem) targetItem.classList.add('active');
+    
+    // Mobil uyum için menüyü kapat
+    document.getElementById('sidebar').classList.remove('active');
+    document.getElementById('sidebarOverlay').classList.remove('active');
+}
+
+// Dosya Seçim İzleyici
+const imageInput = document.getElementById('imageInput');
+const fileName = document.getElementById('fileName');
+if(imageInput) {
+    imageInput.addEventListener('change', (e) => {
+        if(e.target.files.length > 0) fileName.textContent = e.target.files[0].name;
+    });
+}
+
+// ImgBB Upload Servisi
 async function uploadToImgBB(file) {
     const formData = new FormData();
     formData.append('image', file);
@@ -46,54 +56,53 @@ async function uploadToImgBB(file) {
     } catch { return null; }
 }
 
-// 1. KULLANICI: İtiraf Gönder -> [pending_posts] Koleksiyonu
+// 1. İTİRAF GÖNDER -> [pending_posts]
+const confessForm = document.getElementById('confessForm');
 confessForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const msg = confessMessage.value.trim();
+    const msg = document.getElementById('confessMessage').value.trim();
     const file = imageInput.files[0];
-    if(!msg) return;
+    const submitBtn = document.getElementById('submitBtn');
+    const globalStatus = document.getElementById('globalStatus');
 
     submitBtn.disabled = true;
-    submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> SİNYAL GÖNDERİLİYOR...`;
+    submitBtn.textContent = "İŞLENİYOR...";
 
     let imgUrl = "";
     if(file) {
-        globalStatus.textContent = "Sistem: Görsel buluta aktarılıyor...";
+        globalStatus.textContent = "Görsel uzak sunucuya aktarılıyor...";
         imgUrl = await uploadToImgBB(file);
     }
 
-    globalStatus.textContent = "Sistem: Veri ağ kuyruğuna alınıyor...";
-    
-    // Doğrudan senin koleksiyon ismin: pending_posts
     db.collection('pending_posts').add({
         text: msg,
         imageUrl: imgUrl,
         timestamp: firebase.firestore.FieldValue.serverTimestamp()
     }).then(() => {
-        globalStatus.innerHTML = "<span style='color:var(--orange-primary)'>Sistem: İtiraf onay kuyruğuna başarıyla iletildi.</span>";
+        globalStatus.innerHTML = "<span style='color:var(--orange)'>Başarılı: İtiraf admin onay odasına iletildi.</span>";
         confessForm.reset();
-        fileName.textContent = "Dosya seçilmedi";
+        fileName.textContent = "Dosya taranmadı";
     }).catch(() => {
-        globalStatus.textContent = "Hata: Bağlantı hatası oluştu.";
+        globalStatus.textContent = "Hata: Sunucu hatası.";
     }).finally(() => {
         submitBtn.disabled = false;
-        submitBtn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> GÖNDER`;
+        submitBtn.textContent = "AĞA SIZDIR";
     });
 });
 
-// 2. AKIŞ: Onaylanmış İtirafları Canlı İzleme -> [approved_posts] Koleksiyonu
+// 2. ONAYLANAN AKIŞ -> [approved_posts]
 db.collection('approved_posts').orderBy('timestamp', 'desc').onSnapshot(snapshot => {
     const feed = document.getElementById('uploadPostsFeed');
     feed.innerHTML = "";
-    if(snapshot.empty) { feed.innerHTML = "<p class='soft-text'>Yayınlanmış veri akışı bulunmuyor.</p>"; return; }
+    if(snapshot.empty) { feed.innerHTML = "<p class='soft-text'>Yayınlanmış hiçbir itiraf bulunamadı.</p>"; return; }
     
     snapshot.forEach(doc => {
         const post = doc.data();
-        const date = post.timestamp ? new Date(post.timestamp.seconds * 1000).toLocaleString() : "Şimdi";
+        const date = post.timestamp ? new Date(post.timestamp.seconds * 1000).toLocaleString() : "Yeni";
         const card = document.createElement('div');
         card.className = "premium-card post-wrapper";
         card.innerHTML = `
-            <div class="post-header"><span class="soft-text">// PAYLAŞIM: ${date}</span></div>
+            <div class="post-header"><span>// TIMELOG: ${date}</span></div>
             <p class="post-body">${escapeHtml(post.text)}</p>
             ${post.imageUrl ? `<img src="${post.imageUrl}" class="post-img">` : ''}
         `;
@@ -101,7 +110,7 @@ db.collection('approved_posts').orderBy('timestamp', 'desc').onSnapshot(snapshot
     });
 });
 
-// 3. LİG SİSTEMİ: Kullanıcı Skorları -> [users] Koleksiyonu
+// 3. SKOR LİSTESİ -> [users]
 db.collection('users').orderBy('score', 'desc').limit(10).onSnapshot(snapshot => {
     const container = document.getElementById('leaderboardContainer');
     container.innerHTML = "";
@@ -110,15 +119,15 @@ db.collection('users').orderBy('score', 'desc').limit(10).onSnapshot(snapshot =>
         const u = doc.data();
         container.innerHTML += `
             <tr>
-                <td style="color:var(--orange-primary); font-weight:bold;">#${rank++}</td>
-                <td>${escapeHtml(u.username || 'Anonim_Kullanici')}</td>
-                <td style="color:var(--orange-primary)">${u.score || 0} PTS</td>
+                <td style="color:var(--orange); font-weight:bold;">#${rank++}</td>
+                <td>${escapeHtml(u.username || 'Anonim')}</td>
+                <td style="color:var(--orange)">${u.score || 0} PTS</td>
             </tr>
         `;
     });
 });
 
-// 4. ANKET MOTORU: Oylamalar -> [polls] Koleksiyonu
+// 4. ANKET ALANI -> [polls]
 db.collection('polls').onSnapshot(snapshot => {
     const container = document.getElementById('pollsFeed');
     container.innerHTML = "";
@@ -130,48 +139,40 @@ db.collection('polls').onSnapshot(snapshot => {
 
         container.innerHTML += `
             <div class="premium-card">
-                <h4 style="margin-bottom:15px; font-size:1.05rem;">${escapeHtml(poll.question)}</h4>
-                <div class="poll-option-container">
-                    <button class="poll-btn" onclick="registerVote('${doc.id}', 'opt1')">
-                        <div class="poll-fill" style="width: ${p1}%"></div>
-                        <div class="poll-content"><span>${escapeHtml(poll.opt1)}</span><span>%${p1}</span></div>
-                    </button>
-                    <button class="poll-btn" onclick="registerVote('${doc.id}', 'opt2')">
-                        <div class="poll-fill" style="width: ${p2}%"></div>
-                        <div class="poll-content"><span>${escapeHtml(poll.opt2)}</span><span>%${p2}</span></div>
-                    </button>
-                </div>
+                <h4 style="margin-bottom:15px;">${escapeHtml(poll.question)}</h4>
+                <button class="poll-btn" onclick="addVote('${doc.id}', 'opt1')">
+                    <div class="poll-fill" style="width: ${p1}%"></div>
+                    <div class="poll-content"><span>${escapeHtml(poll.opt1)}</span><span>%${p1}</span></div>
+                </button>
+                <button class="poll-btn" onclick="addVote('${doc.id}', 'opt2')">
+                    <div class="poll-fill" style="width: ${p2}%"></div>
+                    <div class="poll-content"><span>${escapeHtml(poll.opt2)}</span><span>%${p2}</span></div>
+                </button>
             </div>
         `;
     });
 });
 
-// 5. ADMİN PANEL KONTROLLERİ -> [admin_config] Koleksiyonu
-function openAdminModal() { document.getElementById('adminModal').classList.add('active'); }
-function closeAdminModal() { document.getElementById('adminModal').classList.remove('active'); }
-
+// 5. ADMİN GİRİŞ KONTROLÜ -> [admin_config]
 function checkAdminAccess() {
     const pwd = document.getElementById('adminPassword').value;
-    
-    // admin_config üzerinden şifre kontrolü
     db.collection('admin_config').doc('system_config').get().then(doc => {
         if(doc.exists && doc.data().didogram_password === pwd) {
             isAdminAuthenticated = true;
             document.getElementById('adminAuthZone').style.display = 'none';
             document.getElementById('adminControlZone').style.display = 'block';
-            syncPendingPosts();
+            syncAdminPendingFeed();
         } else {
-            document.getElementById('authError').textContent = "HATA: Yetkisiz Admin Girişi.";
+            document.getElementById('authError').textContent = "Erişim Reddedildi: Geçersiz Yönetici Şifresi.";
         }
     });
 }
 
-// Onay Bekleyenleri Getir [pending_posts]
-function syncPendingPosts() {
+function syncAdminPendingFeed() {
     db.collection('pending_posts').orderBy('timestamp', 'asc').onSnapshot(snapshot => {
         const container = document.getElementById('pendingPostsFeed');
         container.innerHTML = "";
-        if(snapshot.empty) { container.innerHTML = "<p class='soft-text'>Onay bekleyen itiraf kuyruğu temiz.</p>"; return; }
+        if(snapshot.empty) { container.innerHTML = "<p class='soft-text'>Şu an onay bekleyen herhangi bir itiraf yok.</p>"; return; }
 
         snapshot.forEach(doc => {
             const post = doc.data();
@@ -179,10 +180,10 @@ function syncPendingPosts() {
             div.className = "admin-raw";
             div.innerHTML = `
                 <p>${escapeHtml(post.text)}</p>
-                ${post.imageUrl ? `<img src="${post.imageUrl}" style="width:120px; border-radius:6px; margin-top:10px;">` : ''}
+                ${post.imageUrl ? `<img src="${post.imageUrl}" style="width:100px; margin-top:10px; display:block; border-radius:6px;">` : ''}
                 <div class="admin-actions">
-                    <button class="btn-modern btn-orange" onclick="pushToUpload('${doc.id}')">ONAYLA [approved_posts]</button>
-                    <button class="btn-modern btn-danger" onclick="deleteFromPending('${doc.id}')">REDDET</button>
+                    <button class="btn-modern btn-orange" onclick="adminApprove('${doc.id}')">KABUL ET</button>
+                    <button class="btn-modern btn-danger" onclick="adminReject('${doc.id}')">REDDET</button>
                 </div>
             `;
             container.appendChild(div);
@@ -190,33 +191,26 @@ function syncPendingPosts() {
     });
 }
 
-// ADMİN ONAY: pending_posts -> approved_posts taşınma motoru
-async function pushToUpload(docId) {
+async function adminApprove(docId) {
     if(!isAdminAuthenticated) return;
     const ref = db.collection('pending_posts').doc(docId);
     const snap = await ref.get();
     if(snap.exists) {
         const d = snap.data();
-        
-        // Tamamen senin belirttiğin isim: approved_posts
         await db.collection('approved_posts').add({
             text: d.text,
             imageUrl: d.imageUrl,
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
         });
-        
-        // İşlem bitince pending_posts'tan siler
         await ref.delete();
     }
 }
 
-// ADMİN RED: pending_posts'tan direkt siler
-function deleteFromPending(docId) {
+function adminReject(docId) {
     if(!isAdminAuthenticated) return;
     db.collection('pending_posts').doc(docId).delete();
 }
 
-// XSS Güvenlik Filtresi (Yazıların Soft Kalması ve Bozulmaması İçin)
 function escapeHtml(text) {
     if(!text) return "";
     return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
